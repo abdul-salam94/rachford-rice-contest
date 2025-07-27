@@ -7,7 +7,7 @@ EPS_M = float_info.epsilon
 
 
 def severity(R: float, eps: float):
-    return np.math.log10(R / eps) if R else -np.inf
+    return np.log10(R / eps) if R else -np.inf
 
 
 def is_it_converged(test_severity: float):
