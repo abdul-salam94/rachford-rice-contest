@@ -1,30 +1,25 @@
 from sys import float_info
-
 import numpy as np
+import math   # <-- Added
 
 EPS_T = 1e-15
 EPS_M = float_info.epsilon
 
-
 def severity(R: float, eps: float):
-    return np.math.log10(R / eps) if R else -np.inf
-
+    return math.log10(R / eps) if R else -np.inf   # <-- Fixed
 
 def is_it_converged(test_severity: float):
     return test_severity <= 0
-
 
 def phase_composition_test(ui: np.ndarray, Nc: int):
     eps_phase = EPS_T + Nc * EPS_M
     comp_severity = severity(abs(1 - np.sum(ui)), eps_phase)
     return comp_severity, is_it_converged(comp_severity)
 
-
 def fraction_test(V: float, L: float):
     eps_f = EPS_T
     fraction_severity = severity(abs(V + L - 1) / (abs(V) + abs(L) + 1), eps_f)
     return fraction_severity, is_it_converged(fraction_severity)
-
 
 def matbal_test(V: float, yi: np.ndarray, L: float, xi: np.ndarray, zi: np.ndarray):
     eps_z = EPS_T
@@ -34,7 +29,6 @@ def matbal_test(V: float, yi: np.ndarray, L: float, xi: np.ndarray, zi: np.ndarr
     )
     return matbal_severity, is_it_converged(matbal_severity)
 
-
 def k_value_test(yi: np.ndarray, xi: np.ndarray, Ki: np.ndarray):
     eps_k = EPS_T
     kvalue_severity = severity(
@@ -42,12 +36,10 @@ def k_value_test(yi: np.ndarray, xi: np.ndarray, Ki: np.ndarray):
     )
     return kvalue_severity, is_it_converged(kvalue_severity)
 
-
 def inside_bounds(V: float, Ki: np.ndarray):
     Vmin = 1 / (1 - np.max(Ki))
     Vmax = 1 / (1 - np.min(Ki))
     return V < Vmax and Vmin < V
-
 
 def is_converged(
     Nc: int,
